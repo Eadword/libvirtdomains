@@ -9,7 +9,10 @@
   <memory unit='KiB'>18874368</memory>
   <currentMemory unit='KiB'>18874368</currentMemory>
   <memoryBacking>
-    <nosharepages/>
+    <hugepages>
+      <page size='2048' unit='KiB'/>
+    </hugepages>
+    <access mode='shared'/>
   </memoryBacking>
   <vcpu placement='static'>6</vcpu>
   <cputune>
@@ -42,6 +45,9 @@
   <cpu mode='host-passthrough' check='none'>
     <topology sockets='1' dies='1' cores='3' threads='2'/>
     <cache mode='passthrough'/>
+    <numa>
+      <cell id='0' cpus='0-5' memory='18874368' unit='KiB' memAccess='shared'/>
+    </numa>
   </cpu>
   <clock offset='utc'>
     <timer name='rtc' tickpolicy='catchup'/>
@@ -151,6 +157,11 @@
       <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
     </controller>
     <filesystem type='mount' accessmode='passthrough'>
+      <driver type='virtiofs' queue='1024'/>
+      <binary path='/usr/bin/virtiofsd' xattr='on'>
+        <cache mode='always'/>
+        <lock posix='on' flock='on'/>
+      </binary>
       <source dir='/neo/user'/>
       <target dir='user'/>
       <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
