@@ -79,7 +79,7 @@
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
-      <source file='/neo/domains/virtio-win-0.1.160-1.iso'/>
+      <source file='/neo/domains/virtio-win-0.1.185.iso'/>
       <backingStore/>
       <target dev='hdb' bus='sata'/>
       <readonly/>
@@ -171,14 +171,6 @@
       <driver queues='8'/>
       <address type='pci' domain='0x0000' bus='0x03' slot='0x00' function='0x0'/>
     </interface>
-    <serial type='pty'>
-      <target type='isa-serial' port='0'>
-        <model name='isa-serial'/>
-      </target>
-    </serial>
-    <console type='pty'>
-      <target type='serial' port='0'/>
-    </console>
     <channel type='unix'>
       <target type='virtio' name='org.qemu.guest_agent.0'/>
       <address type='virtio-serial' controller='0' bus='0' port='1'/>
