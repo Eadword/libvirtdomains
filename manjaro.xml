@@ -1,12 +1,13 @@
-<?xml version='1.0' encoding='UTF-8'?>
 <domain type='kvm'>
-  <name>Manjaro Desktop</name>
-  <uuid>4aee9954-1859-6502-58b9-0a1f9968e8d7</uuid>
+  <name>manjaro</name>
+  <uuid>0ade8e36-e449-4f37-9f6f-d210c17d8bc6</uuid>
   <metadata>
-    <vmtemplate xmlns="unraid" name="Arch" icon="arch.png" os="arch"/>
+    <libosinfo:libosinfo xmlns:libosinfo="http://libosinfo.org/xmlns/libvirt/domain/1.0">
+      <libosinfo:os id="http://manjaro.org/manjaro/rolling"/>
+    </libosinfo:libosinfo>
   </metadata>
   <memory unit='KiB'>18874368</memory>
-  <currentMemory unit='KiB'>4194304</currentMemory>
+  <currentMemory unit='KiB'>18874368</currentMemory>
   <memoryBacking>
     <nosharepages/>
   </memoryBacking>
@@ -20,16 +21,26 @@
     <vcpupin vcpu='5' cpuset='7'/>
   </cputune>
   <os>
-    <type arch='x86_64' machine='pc-q35-4.2'>hvm</type>
-    <loader readonly='yes' type='pflash'>/usr/share/qemu/ovmf-x64/OVMF_CODE-pure-efi.fd</loader>
-    <nvram>/etc/libvirt/qemu/nvram/4aee9954-1859-6502-58b9-0a1f9968e8d7_VARS-pure-efi.fd</nvram>
+    <type arch='x86_64' machine='pc-q35-5.0'>hvm</type>
+    <loader readonly='yes' type='pflash'>/usr/share/edk2-ovmf/x64/OVMF_CODE.fd</loader>
+    <nvram>/var/lib/libvirt/qemu/nvram/manjaro_VARS.fd</nvram>
   </os>
   <features>
     <acpi/>
     <apic/>
+    <hyperv>
+      <relaxed state='on'/>
+      <vapic state='on'/>
+      <spinlocks state='on' retries='8191'/>
+      <vendor_id state='on' value='1234567890ab'/>
+    </hyperv>
+    <kvm>
+      <hidden state='on'/>
+    </kvm>
+    <ioapic driver='kvm'/>
   </features>
   <cpu mode='host-passthrough' check='none'>
-    <topology sockets='1' cores='3' threads='2'/>
+    <topology sockets='1' dies='1' cores='3' threads='2'/>
     <cache mode='passthrough'/>
   </cpu>
   <clock offset='utc'>
@@ -39,19 +50,19 @@
   </clock>
   <on_poweroff>destroy</on_poweroff>
   <on_reboot>restart</on_reboot>
-  <on_crash>restart</on_crash>
+  <on_crash>destroy</on_crash>
   <devices>
-    <emulator>/usr/local/sbin/qemu</emulator>
+    <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
-      <driver name='qemu' type='raw' cache='writeback'/>
-      <source file='/mnt/user/domains/Manjaro Desktop/vdisk1.img'/>
+      <driver name='qemu' type='raw' cache='none'/>
+      <source file='/neo/domains/manjaro-desktop.img'/>
       <target dev='hdc' bus='virtio'/>
       <boot order='1'/>
       <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
     </disk>
     <disk type='file' device='disk'>
-      <driver name='qemu' type='raw' cache='writeback'/>
-      <source file='/mnt/user/domains/Manjaro Desktop/8GB.swap'/>
+      <driver name='qemu' type='raw' cache='none'/>
+      <source file='/neo/domains/manjaro-desktop-8gb.swap'/>
       <target dev='hdd' bus='virtio'/>
       <address type='pci' domain='0x0000' bus='0x05' slot='0x00' function='0x0'/>
     </disk>
@@ -140,14 +151,15 @@
       <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
     </controller>
     <filesystem type='mount' accessmode='passthrough'>
-      <source dir='/mnt/user/'/>
+      <source dir='/neo/user'/>
       <target dir='user'/>
       <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
     </filesystem>
     <interface type='bridge'>
-      <mac address='52:54:00:14:e9:86'/>
+      <mac address='52:54:00:db:40:9a'/>
       <source bridge='br0'/>
       <model type='virtio'/>
+      <driver queues='8'/>
       <address type='pci' domain='0x0000' bus='0x02' slot='0x00' function='0x0'/>
     </interface>
     <serial type='pty'>
@@ -172,7 +184,6 @@
       <source>
         <address domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
       </source>
-      <rom file='/mnt/user/isos/Asus.GTX1070.custom.rom'/>
       <address type='pci' domain='0x0000' bus='0x06' slot='0x00' function='0x0'/>
     </hostdev>
     <hostdev mode='subsystem' type='pci' managed='yes'>
@@ -196,14 +207,11 @@
       </source>
       <address type='pci' domain='0x0000' bus='0x0f' slot='0x02' function='0x0'/>
     </hostdev>
-    <hostdev mode='subsystem' type='pci' managed='yes'>
-      <driver name='vfio'/>
-      <source>
-        <address domain='0x0000' bus='0x0c' slot='0x00' function='0x0'/>
-      </source>
-      <address type='pci' domain='0x0000' bus='0x08' slot='0x00' function='0x0'/>
-    </hostdev>
     <memballoon model='none'/>
+    <rng model='virtio'>
+      <backend model='random'>/dev/urandom</backend>
+      <address type='pci' domain='0x0000' bus='0x08' slot='0x00' function='0x0'/>
+    </rng>
   </devices>
 </domain>
 
