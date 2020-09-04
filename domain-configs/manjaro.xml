@@ -42,7 +42,7 @@
     </kvm>
     <ioapic driver='kvm'/>
   </features>
-  <cpu mode='host-passthrough' check='none'>
+  <cpu mode='host-passthrough' check='none' migratable='on'>
     <topology sockets='1' dies='1' cores='3' threads='2'/>
     <cache mode='passthrough'/>
     <numa>
@@ -225,4 +225,3 @@
     </rng>
   </devices>
 </domain>
-
