@@ -172,7 +172,7 @@
     </controller>
     <filesystem type='mount' accessmode='passthrough'>
       <driver type='virtiofs' queue='1024'/>
-      <binary path='/usr/bin/virtiofsd' xattr='on'>
+      <binary path='/usr/lib/qemu/virtiofsd' xattr='on'>
         <cache mode='always'/>
         <lock posix='on' flock='on'/>
       </binary>
